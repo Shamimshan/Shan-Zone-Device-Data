@@ -8,39 +8,98 @@
     <style>
         body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; }
         .portal-container { max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        h2 { text-align: center; color: #0a192f; margin-bottom: 20px; text-transform: uppercase; }
+        
+        .search-bar { background: #eef2f7; padding: 15px; display: flex; gap: 15px; margin-bottom: 20px; border-radius: 6px; }
+        .search-bar input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        
+        .section-title { background: #0a192f; color: #64ffda; padding: 8px 15px; margin: 20px 0 10px; border-radius: 4px; font-size: 14px; text-transform: uppercase; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media(max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+        
         .input-group { display: flex; flex-direction: column; }
-        .input-group label { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        .input-group label { font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #333; }
         .input-group input, .input-group select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .action-buttons { margin-top: 25px; display: flex; justify-content: flex-end; gap: 15px; }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; color: white; cursor: pointer; }
+        
+        .action-buttons { margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; color: white; cursor: pointer; font-weight: 600; }
+        .btn-search { background: #0a192f; }
+        .btn-reset { background: #dc3545; }
+        .btn-save { background: #28a745; }
+        .btn-update { background: #fd7e14; }
+        .btn-print { background: #17a2b8; }
+
+        /* Print Settings: Hide buttons and search bar when printing */
+        @media print {
+            body { background: #fff; padding: 0; }
+            .portal-container { box-shadow: none; border: none; padding: 0; }
+            .no-print { display: none !important; }
+            .input-group input, .input-group select { border: none; border-bottom: 1px solid #000; border-radius: 0; padding: 5px 0; background: transparent; }
+        }
     </style>
 </head>
 <body>
 
 <div class="portal-container">
-    <h2>Device Management</h2>
-    <div class="search-bar">
+    <h2><i class="fas fa-network-wired"></i> Shan Zone Device Manager</h2>
+    
+    <div class="search-bar no-print">
         <input type="text" id="searchId" placeholder="Enter User ID to search...">
-        <button class="btn" style="background:#0a192f" onclick="searchData()">Search</button>
+        <button class="btn btn-search" onclick="searchData()">Search</button>
     </div>
 
     <form id="deviceForm">
         <input type="hidden" id="rowIdx">
+        
+        <div class="section-title">General Information</div>
         <div class="form-grid">
             <div class="input-group"><label>S. No.</label><input type="text" id="sno" name="sno" readonly></div>
+            <div class="input-group"><label>Date & Time</label><input type="text" id="datetime" name="datetime" readonly></div>
             <div class="input-group"><label>User ID *</label><input type="text" id="userid" name="userid" required></div>
+            <div class="input-group"><label>Username</label><input type="text" id="user" name="user"></div>
+            <div class="input-group"><label>Password</label><input type="text" id="password" name="password"></div>
+            <div class="input-group"><label>Location</label><input type="text" id="location" name="location"></div>
+        </div>
+
+        <div class="section-title">Network Details</div>
+        <div class="form-grid">
             <div class="input-group"><label>Device Name</label><input type="text" id="devicename" name="devicename"></div>
             <div class="input-group"><label>Device IP</label><input type="text" id="deviceip" name="deviceip"></div>
-            <div class="input-group"><label>Username</label><input type="text" id="user" name="user"></div>
-            <div class="input-group"><label>Password</label><input type="password" id="password" name="password"></div>
+            <div class="input-group"><label>Online IP</label><input type="text" id="deviceiponline" name="deviceiponline"></div>
+            <div class="input-group"><label>Link Type</label>
+                <select id="linktype" name="linktype">
+                    <option value="">Select...</option>
+                    <option value="Fiber">Fiber</option>
+                    <option value="Wireless">Wireless</option>
+                </select>
+            </div>
+            <div class="input-group"><label>RX / TX</label><input type="text" id="rxtx" name="rxtx"></div>
+            <div class="input-group"><label>TR069</label>
+                <select id="tr069" name="tr069">
+                    <option value="">Select...</option>
+                    <option value="Enabled">Enabled</option>
+                    <option value="Disabled">Disabled</option>
+                </select>
+            </div>
+            <div class="input-group"><label>ACS Address</label><input type="text" id="acsaddress" name="acsaddress"></div>
+        </div>
+
+        <div class="section-title">Hardware & Billing</div>
+        <div class="form-grid">
             <div class="input-group"><label>Model Number</label><input type="text" id="modelno" name="modelno"></div>
             <div class="input-group"><label>MAC Address</label><input type="text" id="macaddr" name="macaddr"></div>
+            <div class="input-group"><label>Serial Number</label><input type="text" id="serialno" name="serialno"></div>
+            <div class="input-group"><label>Purchase Date</label><input type="date" id="pdate" name="pdate"></div>
+            <div class="input-group"><label>Invoice Number</label><input type="text" id="invoiceno" name="invoiceno"></div>
+            <div class="input-group"><label>Vendor</label><input type="text" id="vendor" name="vendor"></div>
+            <div class="input-group"><label>Installation Date</label><input type="date" id="idate" name="idate"></div>
         </div>
-        <div class="action-buttons">
-            <button type="button" class="btn" style="background:#dc3545" onclick="resetForm()">Reset</button>
-            <button type="button" class="btn" style="background:#007bff" onclick="submitData('save')">Save</button>
-            <button type="button" class="btn" style="background:#fd7e14" onclick="submitData('update')">Update</button>
+
+        <div class="action-buttons no-print">
+            <button type="button" class="btn btn-reset" onclick="resetForm()"><i class="fas fa-undo"></i> Reset</button>
+            <button type="button" class="btn btn-save" onclick="submitData('save')"><i class="fas fa-save"></i> Save</button>
+            <button type="button" class="btn btn-update" onclick="submitData('update')"><i class="fas fa-edit"></i> Update</button>
+            <button type="button" class="btn btn-print" onclick="saveAndPrint()"><i class="fas fa-print"></i> Save & Print</button>
         </div>
     </form>
 </div>
@@ -52,32 +111,58 @@
 
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzARBHv8cnMhzAvYKNSYz3ffm_8tn6gdbQEqjLLZJQjvdsimFaSt916A0TbUTWrYWHHfg/exec";
 
-    function submitData(action) {
+    // Data Submit Function
+    function submitData(action, shouldPrint = false) {
         let params = new URLSearchParams(new FormData(document.getElementById('deviceForm')));
         params.append("action", action);
         params.append("key", _v(_0x1a2[1])); 
         params.append("row", document.getElementById('rowIdx').value);
         
         fetch(SCRIPT_URL, { method: 'POST', body: params })
-        .then(res => res.text()).then(msg => { alert(msg); if(action === 'save') resetForm(); });
+        .then(res => res.text()).then(msg => { 
+            alert(msg); 
+            if(shouldPrint && msg.includes("Success")) {
+                window.print(); // Print only if save was successful
+            }
+            if(action === 'save' && msg.includes("Success")) {
+                resetForm(); 
+            }
+        });
     }
 
+    // Save and Print Function
+    function saveAndPrint() {
+        let rowVal = document.getElementById('rowIdx').value;
+        let action = rowVal ? 'update' : 'save'; // अगर पहले से सर्च किया है तो अपडेट करेगा, वरना सेव करेगा
+        submitData(action, true);
+    }
+
+    // Search Data Function
     function searchData() {
         let id = document.getElementById('searchId').value;
+        if(!id) { alert("Please enter User ID"); return; }
+        
         let key = _v(_0x1a2[1]);
         fetch(`${SCRIPT_URL}?id=${id}&key=${key}`)
         .then(res => res.json()).then(data => {
-            if(data === "Not Found") alert("Not Found");
-            else {
+            if(data === "Not Found") {
+                alert("Not Found");
+            } else {
                 for (let key in data) {
-                    if(document.getElementById(key)) document.getElementById(key).value = data[key];
+                    if(document.getElementById(key)) {
+                        document.getElementById(key).value = data[key];
+                    }
                 }
                 document.getElementById('rowIdx').value = data.row;
             }
         });
     }
 
-    function resetForm() { document.getElementById('deviceForm').reset(); document.getElementById('rowIdx').value = ""; }
+    // Reset Form Function
+    function resetForm() { 
+        document.getElementById('deviceForm').reset(); 
+        document.getElementById('rowIdx').value = ""; 
+    }
 </script>
 
 </body>
