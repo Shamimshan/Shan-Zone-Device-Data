@@ -327,9 +327,10 @@
                 </div>
             </section>
 
+            <!-- YAHAN AAPKA NAYA HARDWARE & BILLING SECTION ADD KIYA GAYA HAI -->
             <section class="form-section">
                 <div class="section-heading">
-                    <i class="fa-solid fa-microchip"></i> Hardware Information
+                    <i class="fa-solid fa-microchip"></i> Hardware & Billing
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
@@ -349,6 +350,22 @@
                             <input type="text" id="serialNo" name="serialNo">
                             <button type="button" class="field-btn copy-btn" data-copy="serialNo"><i class="fa-regular fa-copy"></i></button>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Purchase Date</label>
+                        <input type="date" id="purchaseDate" name="purchaseDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Number</label>
+                        <input type="text" id="invoiceNo" name="invoiceNo">
+                    </div>
+                    <div class="form-group">
+                        <label>Vendor</label>
+                        <input type="text" id="vendor" name="vendor">
+                    </div>
+                    <div class="form-group">
+                        <label>Installation Date</label>
+                        <input type="date" id="installDate" name="installDate">
                     </div>
                     <div class="form-group full-width">
                         <label>Remarks</label>
@@ -402,7 +419,6 @@
         ====================================================*/
         const CONFIG = {
             // Password 'SHANZONE@2026' is stored in encrypted Base-64 format. 
-            // Koi code padh ke seedha nahi samajh payega.
             ENCRYPTED_PASS: "U0hBTlpPTkFAMjAyNg==", 
             
             // MAHA ZAROORI: Apna naya deploy kiya hua App script web App ka link iske ander paste karein!
@@ -446,7 +462,6 @@
 
         document.getElementById("loginBtn")?.addEventListener("click",()=>{
             let password = document.getElementById("portalPassword").value.trim();
-            // Encrypted check ho raha hai yahan
             if(btoa(password) === CONFIG.ENCRYPTED_PASS){
                 localStorage.setItem(CONFIG.STORAGE_KEY,"true");
                 showApplication();
@@ -574,13 +589,10 @@
             document.getElementById("lastUpdate").innerHTML = new Date().toLocaleTimeString();
         }
 
-        /*====================================================
-         GITHUB SE GOOGLE SHEET CONNECT KARNE WALA FETCH FUNCTION
-        ====================================================*/
         function callServer(functionName, data={}){
             showLoading();
             return new Promise((resolve,reject)=>{
-                if(CONFIG.API_URL === "https://script.google.com/macros/s/AKfycbw33qaLGy340h6T20n3RvaRXF1ia4lHl8tHjNdrx9rgdhg908BHM0AJgW4x6H6u8vb-9Q/exec" || CONFIG.API_URL === "") {
+                if(CONFIG.API_URL === "https://script.google.com/macros/s/AKfycbyUql2WWao2qb1AfRWMhgcQume1OhAtIDaVlhIxYAgL88pGQSYDRLJXv6rJA2aQpVHuDg/exec" || CONFIG.API_URL === "") {
                     hideLoading();
                     alert("Error: Aapne API URL setup nahi kiya hai. Code me apna Web App URL dalein.");
                     reject("Google Script Not Connected");
@@ -589,7 +601,7 @@
                 
                 fetch(CONFIG.API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' }, // Avoids preflight CORS issues
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ action: functionName, payload: data })
                 })
                 .then(res => res.json())
@@ -622,6 +634,10 @@
                 modelNo: document.getElementById("modelNo").value,
                 macAddress: document.getElementById("macAddress").value,
                 serialNo: document.getElementById("serialNo").value,
+                purchaseDate: document.getElementById("purchaseDate").value, // New fields
+                invoiceNo: document.getElementById("invoiceNo").value,
+                vendor: document.getElementById("vendor").value,
+                installDate: document.getElementById("installDate").value,
                 remarks: document.getElementById("remarks").value
             };
         }
@@ -698,6 +714,10 @@
             document.getElementById("modelNo").value = data.modelNo || "";
             document.getElementById("macAddress").value = data.macAddress || "";
             document.getElementById("serialNo").value = data.serialNo || "";
+            document.getElementById("purchaseDate").value = data.purchaseDate || ""; // New fields mapped
+            document.getElementById("invoiceNo").value = data.invoiceNo || "";
+            document.getElementById("vendor").value = data.vendor || "";
+            document.getElementById("installDate").value = data.installDate || "";
             document.getElementById("remarks").value = data.remarks || "";
         }
 
