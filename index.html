@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shan Zone | Device Management Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f0f4f8;
+            --primary: #0a192f;
+            --secondary: #112240;
+            --accent: #64ffda;
+            --text-main: #ccd6f6;
+            --text-dark: #333333;
+            --btn-save: #007bff;
+            --btn-update: #fd7e14;
+            --btn-reset: #dc3545;
+            --success: #28a745;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: none; /* Hidden until login */
+        }
+
+        .portal-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header-section {
+            background-color: var(--primary);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+        }
+
+        .header-section h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-section p {
+            margin: 5px 0 0;
+            font-size: 12px;
+            color: var(--text-main);
+        }
+
+        .search-bar {
+            background: #eef2f7;
+            padding: 15px 25px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-search {
+            background: var(--secondary);
+            color: #fff;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-search:hover { background: var(--primary); }
+
+        .form-grid {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media(max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .input-group input, .input-group select {
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            background: #fff;
+            transition: border 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .input-group input[readonly] {
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        /* Action Icons inside input */
+        .icon-btn {
+            position: absolute;
+            right: 10px;
+            top: 32px;
+            background: none;
+            border: none;
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .icon-btn:hover { color: var(--btn-save); }
+
+        .action-buttons {
+            padding: 20px 25px 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            background: #fcfcfc;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-reset { background: var(--btn-reset); }
+        .btn-save { background: var(--btn-save); }
+        .btn-update { background: var(--btn-update); }
+        
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Loader & Toast Popup */
+        .loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(10, 25, 47, 0.8); display: none;
+            justify-content: center; align-items: center; z-index: 1000;
+            color: #fff; flex-direction: column;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid var(--accent);
+            border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .toast {
+            position: fixed; top: 20px; right: -300px;
+            background: #333; color: #fff; padding: 15px 25px;
+            border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: right 0.4s ease; z-index: 1001; font-weight: 500;
+        }
+        .toast.success { background: var(--success); border-left: 5px solid #1e7e34; }
+        .toast.error { background: var(--btn-reset); border-left: 5px solid #a71d2a; }
+        .toast.show { right: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Loading Animation -->
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+        <p style="margin-top:15px; font-weight:600;">Processing...</p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"><i class="fas fa-info-circle"></i> <span id="toastMsg">Message</span></div>
+
+    <div class="portal-container">
+        <div class="header-section">
+            <h1>SHAN ZONE</h1>
+            <p>Malmaliya Urf Sirsia, Partawal Bazar, Maharajganj (U.P.) 273301 | Device Management Portal</p>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchId" placeholder="Enter User ID to search existing record..." onkeypress="if(event.key==='Enter') searchData()">
+            <button class="btn-search" onclick="searchData()"><i class="fas fa-search"></i> Search</button>
+        </div>
+
+        <form id="deviceForm">
+            <input type="hidden" id="rowIdx">
+            
+            <div class="form-grid">
+                <!-- Auto Generated Fields -->
+                <div class="input-group">
+                    <label>S. No. (Auto)</label>
+                    <input type="text" id="sno" readonly>
+                </div>
+                <div class="input-group">
+                    <label>Date & Time (Auto)</label>
+                    <input type="text" id="datetime" readonly>
+                </div>
+
+                <!-- Primary Data -->
+                <div class="input-group">
+                    <label>User ID *</label>
+                    <input type="text" id="userid" required placeholder="Ex: SZ-1001">
+                </div>
+                <div class="input-group">
+                    <label>Device Name</label>
+                    <input type="text" id="devicename" placeholder="Ex: Syrotech XPON">
+                </div>
+
+                <!-- IP Addresses with Validation & Copy -->
+                <div class="input-group">
+                    <label>Device IP</label>
+                    <input type="text" id="deviceip" placeholder="192.168.1.1" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" title="Enter a valid IP Address">
+                    <button type="button" class="icon-btn" onclick="copyToClip('deviceip')" title="Copy IP"><i class="far fa-copy"></i></button>
+                </div>
+                <div class="input-group">
+                    <label>Device IP for Online</label>
+                    <input type="text" id="deviceiponline" placeholder="10.10.X.X" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" title="Enter a valid IP Address">
+                    <button type="button" class="icon-btn" onclick="copyToClip('deviceiponline')" title="Copy IP"><i class="far fa-copy"></i></button>
+                </div>
+
+                <!-- Credentials -->
+                <div class="input-group">
+                    <label>User</label>
+                    <input type="text" id="user" placeholder="Username">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Password">
+                    <button type="button" class="icon-btn" onclick="togglePassword()" title="Show/Hide"><i class="fas fa-eye" id="eyeIcon"></i></button>
+                </div>
+
+                <!-- Technical Details -->
+                <div class="input-group">
+                    <label>Link Type</label>
+                    <select id="linktype">
+                        <option value="">--Select--</option>
+                        <option value="Fiber">Fiber Optics</option>
+                        <option value="Wireless">Wireless</option>
+                        <option value="P2P">Point to Point</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>RX / TX</label>
+                    <input type="text" id="rxtx" placeholder="Ex: -21.5 / 2.3">
+                </div>
+                
+                <div class="input-group" style="grid-column: 1 / -1;">
+                    <label>Location</label>
+                    <input type="text" id="location" placeholder="Installation Location">
+                </div>
+
+                <div class="input-group">
+                    <label>TR069</label>
+                    <select id="tr069">
+                        <option value="Enabled">Enabled</option>
+                        <option value="Disabled">Disabled</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>ACS Address</label>
+                    <input type="text" id="acsaddress" placeholder="http://acs.server.com:xxxx">
+                    <button type="button" class="icon-btn" onclick="copyToClip('acsaddress')" title="Copy ACS"><i class="far fa-copy"></i></button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" class="btn btn-reset" onclick="resetForm()"><i class="fas fa-sync-alt"></i> Reset</button>
+                <button type="button" class="btn btn-save" onclick="submitData('save')"><i class="fas fa-save"></i> Save (Ctrl+S)</button>
+                <button type="button" class="btn btn-update" onclick="submitData('update')"><i class="fas fa-edit"></i> Update</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // ---------------- CONFIGURATION ----------------
+        // Login Password (Base64 encoded): "ShanAdmin2026"
+        const APP_PASS = "U2hhbkFkbWluMjAyNg=="; 
+        
+        // Secret Key matching the Google Apps Script
+        const SECRET_KEY = "shanzone_admin_786"; 
+        
+        // YOUR GOOGLE SCRIPT URL 
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxWL_2PVMicPAlBCJ-WeUa12X0-n90oAQgaM44X2bWu68h6XKvDagNsPLo-2Jk_CwXYmw/exec"; 
+        // -----------------------------------------------
+
+        window.onload = function() {
+            let pass = prompt("Enter Admin Password to Access Portal:");
+            if (pass === atob(APP_PASS)) {
+                document.body.style.display = 'block';
+                generateAutoFields();
+                document.getElementById('userid').focus();
+            } else {
+                alert("Unauthorized Access!");
+                location.reload();
+            }
+        };
+
+        // --- Core Functions ---
+        function generateAutoFields() {
+            document.getElementById('sno').value = "DEV-" + Math.floor(Date.now() / 1000).toString().slice(-6);
+            
+            let now = new Date();
+            let formatOptions = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('datetime').value = now.toLocaleDateString('en-GB', formatOptions);
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById("toast");
+            document.getElementById("toastMsg").innerText = msg;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => { toast.className = "toast"; }, 3500);
+        }
+
+        function toggleLoader(status) {
+            document.getElementById('loader').style.display = status ? 'flex' : 'none';
+        }
+
+        function copyToClip(elementId) {
+            let copyText = document.getElementById(elementId);
+            if(!copyText.value) return showToast("Field is empty!", "error");
+            navigator.clipboard.writeText(copyText.value);
+            showToast("Copied: " + copyText.value, "success");
+        }
+
+        function togglePassword() {
+            const pwd = document.getElementById("password");
+            const icon = document.getElementById("eyeIcon");
+            if (pwd.type === "password") {
+                pwd.type = "text";
+                icon.className = "fas fa-eye-slash";
+            } else {
+                pwd.type = "password";
+                icon.className = "fas fa-eye";
+            }
+        }
+
+        // --- IP Validation ---
+        function validateIPs() {
+            const ipPattern = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
+            let ip1 = document.getElementById('deviceip').value;
+            let ip2 = document.getElementById('deviceiponline').value;
+            
+            if(ip1 && !ipPattern.test(ip1)) { showToast("Invalid Device IP Format!", "error"); return false; }
+            if(ip2 && !ipPattern.test(ip2)) { showToast("Invalid Online IP Format!", "error"); return false; }
+            return true;
+        }
+
+        // --- Keyboard Shortcuts ---
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                submitData('save');
+            }
+        });
+
+        // --- Database Operations ---
+        function searchData() {
+            let searchId = document.getElementById('searchId').value.trim();
+            if(!searchId) return showToast("Enter User ID to Search!", "error");
+
+            toggleLoader(true);
+            fetch(`${SCRIPT_URL}?id=${encodeURIComponent(searchId)}&key=${SECRET_KEY}`)
+            .then(res => res.json())
+            .then(data => {
+                toggleLoader(false);
+                if(data === "Not Found") {
+                    showToast("User ID Not Found!", "error");
+                } else {
+                    document.getElementById('sno').value = data.sno;
+                    document.getElementById('datetime').value = data.datetime;
+                    document.getElementById('userid').value = data.userid;
+                    document.getElementById('devicename').value = data.devicename;
+                    document.getElementById('deviceip').value = data.deviceip;
+                    document.getElementById('deviceiponline').value = data.deviceiponline;
+                    document.getElementById('user').value = data.user;
+                    document.getElementById('password').value = data.password;
+                    document.getElementById('linktype').value = data.linktype;
+                    document.getElementById('rxtx').value = data.rxtx;
+                    document.getElementById('location').value = data.location;
+                    document.getElementById('tr069').value = data.tr069;
+                    document.getElementById('acsaddress').value = data.acsaddress;
+                    document.getElementById('rowIdx').value = data.row;
+                    showToast("Record Fetched Successfully!", "success");
+                }
+            })
+            .catch(err => {
+                toggleLoader(false);
+                showToast("Connection Error!", "error");
+            });
+        }
+
+        function submitData(action) {
+            let userId = document.getElementById('userid').value.trim();
+            let rowIdx = document.getElementById('rowIdx').value;
+
+            if(!userId) return showToast("User ID is required!", "error");
+            if(action === "update" && !rowIdx) return showToast("Search a record first to update!", "error");
+            if(!validateIPs()) return;
+
+            toggleLoader(true);
+
+            let params = new URLSearchParams();
+            params.append("action", action);
+            params.append("key", SECRET_KEY);
+            params.append("row", rowIdx);
+            
+            const fields = ['sno', 'datetime', 'userid', 'devicename', 'deviceip', 'deviceiponline', 'user', 'password', 'linktype', 'rxtx', 'location', 'tr069', 'acsaddress'];
+            fields.forEach(f => params.append(f, document.getElementById(f).value));
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: params.toString(),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .then(res => res.text())
+            .then(msg => {
+                toggleLoader(false);
+                if (msg.includes("Error")) {
+                    showToast(msg, "error");
+                } else {
+                    showToast(msg, "success");
+                    if (action === "save") resetForm();
+                }
+            })
+            .catch(err => {
+                toggleLoader(false);
+                showToast("Failed to save data. Check internet.", "error");
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('deviceForm').reset();
+            document.getElementById('searchId').value = "";
+            document.getElementById('rowIdx').value = "";
+            generateAutoFields();
+            document.getElementById('userid').focus();
+        }
+    </script>
+</body>
+</html>
