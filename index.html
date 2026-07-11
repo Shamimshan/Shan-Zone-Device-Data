@@ -327,7 +327,6 @@
                 </div>
             </section>
 
-            <!-- YAHAN AAPKA NAYA HARDWARE & BILLING SECTION ADD KIYA GAYA HAI -->
             <section class="form-section">
                 <div class="section-heading">
                     <i class="fa-solid fa-microchip"></i> Hardware & Billing
@@ -418,7 +417,7 @@
          JAVASCRIPT CODE INTEGRATED
         ====================================================*/
         const CONFIG = {
-                        ENCRYPTED_PASS: "U0hBTlpPTkVAMjAyNg==", 
+            ENCRYPTED_PASS: "U0hBTlpPTkVAMjAyNg==", 
             
             // MAHA ZAROORI: Apna naya deploy kiya hua App script web App ka link iske ander paste karein!
             API_URL: "https://script.google.com/macros/s/AKfycbyUql2WWao2qb1AfRWMhgcQume1OhAtIDaVlhIxYAgL88pGQSYDRLJXv6rJA2aQpVHuDg/exec", 
@@ -591,7 +590,8 @@
         function callServer(functionName, data={}){
             showLoading();
             return new Promise((resolve,reject)=>{
-                if(CONFIG.API_URL === "https://script.google.com/macros/s/AKfycbyUql2WWao2qb1AfRWMhgcQume1OhAtIDaVlhIxYAgL88pGQSYDRLJXv6rJA2aQpVHuDg/exec" || CONFIG.API_URL === "") {
+                // Error condition fixed so it accepts your URL without throwing an alert
+                if(CONFIG.API_URL === "") {
                     hideLoading();
                     alert("Error: Aapne API URL setup nahi kiya hai. Code me apna Web App URL dalein.");
                     reject("Google Script Not Connected");
