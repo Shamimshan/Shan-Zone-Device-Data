@@ -17,6 +17,7 @@
             --btn-save: #007bff;
             --btn-update: #fd7e14;
             --btn-reset: #dc3545;
+            --btn-print: #17a2b8;
             --success: #28a745;
         }
 
@@ -148,13 +149,14 @@
             padding: 20px 25px 30px;
             display: flex;
             justify-content: flex-end;
+            flex-wrap: wrap;
             gap: 15px;
             background: #fcfcfc;
             border-top: 1px solid #eee;
         }
 
         .btn {
-            padding: 12px 30px;
+            padding: 12px 25px;
             border: none;
             border-radius: 6px;
             color: white;
@@ -170,6 +172,7 @@
         .btn-reset { background: var(--btn-reset); }
         .btn-save { background: var(--btn-save); }
         .btn-update { background: var(--btn-update); }
+        .btn-print { background: var(--btn-print); }
         
         .btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
@@ -196,6 +199,40 @@
         .toast.error { background: var(--btn-reset); border-left: 5px solid #a71d2a; }
         .toast.show { right: 20px; }
 
+        /* Print Specific CSS */
+        @media print {
+            body { 
+                background: white !important; 
+                margin: 0; 
+                padding: 0 !important; 
+                display: block !important; 
+            }
+            .portal-container { 
+                box-shadow: none !important; 
+                border: none !important; 
+                margin: 0; 
+                max-width: 100%; 
+            }
+            .header-section { 
+                background: white !important; 
+                color: black !important; 
+                border-bottom: 2px solid black !important; 
+            }
+            .header-section p { 
+                color: #333 !important; 
+            }
+            .search-bar, .action-buttons, .icon-btn, .loader-overlay, .toast { 
+                display: none !important; 
+            }
+            .input-group input, .input-group select { 
+                border: 1px solid #999 !important; 
+                background: transparent !important; 
+                color: black !important; 
+            }
+            .form-grid {
+                padding: 15px 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -305,6 +342,8 @@
                 <button type="button" class="btn btn-reset" onclick="resetForm()"><i class="fas fa-sync-alt"></i> Reset</button>
                 <button type="button" class="btn btn-save" onclick="submitData('save')"><i class="fas fa-save"></i> Save (Ctrl+S)</button>
                 <button type="button" class="btn btn-update" onclick="submitData('update')"><i class="fas fa-edit"></i> Update</button>
+                <!-- New Save & Print Button -->
+                <button type="button" class="btn btn-print" onclick="submitAndPrint()"><i class="fas fa-print"></i> Save & Print</button>
             </div>
         </form>
     </div>
@@ -335,7 +374,8 @@
 
         // --- Core Functions ---
         function generateAutoFields() {
-            document.getElementById('sno').value = "DEV-" + Math.floor(Date.now() / 1000).toString().slice(-6);
+            // Generates format like SZ2401, SZ7392 etc.
+            document.getElementById('sno').value = "SZ" + Math.floor(1000 + Math.random() * 9000);
             
             let now = new Date();
             let formatOptions = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
@@ -427,6 +467,15 @@
             });
         }
 
+        function submitAndPrint() {
+            let userId = document.getElementById('userid').value.trim();
+            if(!userId) return showToast("User ID is required!", "error");
+            if(!validateIPs()) return;
+
+            window.isPrintRequested = true;
+            submitData('save');
+        }
+
         function submitData(action) {
             let userId = document.getElementById('userid').value.trim();
             let rowIdx = document.getElementById('rowIdx').value;
@@ -455,14 +504,23 @@
                 toggleLoader(false);
                 if (msg.includes("Error")) {
                     showToast(msg, "error");
+                    window.isPrintRequested = false; // Error aaya to print cancel
                 } else {
                     showToast(msg, "success");
+                    
+                    // Agar Save & Print dabaya gaya tha, to print window kholo
+                    if (window.isPrintRequested) {
+                        setTimeout(() => { window.print(); }, 500);
+                        window.isPrintRequested = false;
+                    }
+                    
                     if (action === "save") resetForm();
                 }
             })
             .catch(err => {
                 toggleLoader(false);
                 showToast("Failed to save data. Check internet.", "error");
+                window.isPrintRequested = false;
             });
         }
 
