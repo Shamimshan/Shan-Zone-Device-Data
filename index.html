@@ -3,99 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shan Zone | Device Management Portal</title>
+    <title>Shan Zone | Secure Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #f0f4f8; --primary: #0a192f; --secondary: #112240; --accent: #64ffda;
-            --btn-save: #007bff; --btn-update: #fd7e14; --btn-reset: #dc3545;
-        }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; display: block; }
-        .portal-container { max-width: 900px; margin: 0 auto; background: #ffffff; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); overflow: hidden; }
-        .header-section { background-color: var(--primary); color: white; padding: 25px 20px; text-align: center; border-bottom: 4px solid var(--accent); }
-        .header-section h1 { margin: 0; font-size: 24px; text-transform: uppercase; }
-        .search-bar { background: #eef2f7; padding: 15px 25px; display: flex; gap: 15px; border-bottom: 1px solid #ddd; }
-        .form-grid { padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .section-divider { background: #0a192f; color: #64ffda; padding: 10px 20px; margin: 20px 25px 0 25px; border-radius: 6px; display: flex; align-items: center; }
-        .section-divider h3 { margin: 0; font-size: 16px; text-transform: uppercase; }
+        body { font-family: 'Poppins', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; }
+        .portal-container { max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
         .input-group { display: flex; flex-direction: column; }
         .input-group label { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
         .input-group input, .input-group select { padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .action-buttons { padding: 20px 25px 30px; display: flex; justify-content: flex-end; gap: 15px; }
+        .action-buttons { margin-top: 25px; display: flex; justify-content: flex-end; gap: 15px; }
         .btn { padding: 10px 20px; border: none; border-radius: 6px; color: white; cursor: pointer; }
-        .btn-save { background: var(--btn-save); } .btn-update { background: var(--btn-update); } .btn-reset { background: var(--btn-reset); }
     </style>
 </head>
 <body>
 
-    <div class="portal-container">
-        <div class="header-section"><h1>SHAN ZONE</h1></div>
-        <div class="search-bar">
-            <input type="text" id="searchId" placeholder="Enter User ID to search...">
-            <button class="btn" style="background:#0a192f" onclick="searchData()">Search</button>
-        </div>
-
-        <form id="deviceForm">
-            <input type="hidden" id="rowIdx">
-            <div class="form-grid">
-                <div class="input-group"><label>S. No.</label><input type="text" id="sno" readonly></div>
-                <div class="input-group"><label>User ID *</label><input type="text" id="userid" required></div>
-                <div class="input-group"><label>Device Name</label><input type="text" id="devicename" name="devicename"></div>
-                <div class="input-group"><label>Device IP</label><input type="text" id="deviceip" name="deviceip"></div>
-                <div class="input-group"><label>Username</label><input type="text" id="user" name="user"></div>
-                <div class="input-group"><label>Password</label><input type="password" id="password" name="password"></div>
-                <div class="input-group"><label>Model Number</label><input type="text" id="modelno" name="modelno"></div>
-                <div class="input-group"><label>MAC Address</label><input type="text" id="macaddr" name="macaddr"></div>
-            </div>
-
-            <div class="action-buttons">
-                <button type="button" class="btn btn-reset" onclick="resetForm()">Reset</button>
-                <button type="button" class="btn btn-save" onclick="submitData('save')">Save</button>
-                <button type="button" class="btn btn-update" onclick="submitData('update')">Update</button>
-            </div>
-        </form>
+<div class="portal-container">
+    <h2>Device Management</h2>
+    <div class="search-bar">
+        <input type="text" id="searchId" placeholder="Enter User ID to search...">
+        <button class="btn" style="background:#0a192f" onclick="searchData()">Search</button>
     </div>
 
-    <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymhYbwBDmyEqqABmsMb37BMJH4dyaDlGXswXEcyK9HiSBuKCQwXRpv-Nh5y9kEuKsUog/exec";
+    <form id="deviceForm">
+        <input type="hidden" id="rowIdx">
+        <div class="form-grid">
+            <div class="input-group"><label>S. No.</label><input type="text" id="sno" name="sno" readonly></div>
+            <div class="input-group"><label>User ID *</label><input type="text" id="userid" name="userid" required></div>
+            <div class="input-group"><label>Device Name</label><input type="text" id="devicename" name="devicename"></div>
+            <div class="input-group"><label>Device IP</label><input type="text" id="deviceip" name="deviceip"></div>
+            <div class="input-group"><label>Username</label><input type="text" id="user" name="user"></div>
+            <div class="input-group"><label>Password</label><input type="password" id="password" name="password"></div>
+            <div class="input-group"><label>Model Number</label><input type="text" id="modelno" name="modelno"></div>
+            <div class="input-group"><label>MAC Address</label><input type="text" id="macaddr" name="macaddr"></div>
+        </div>
+        <div class="action-buttons">
+            <button type="button" class="btn" style="background:#dc3545" onclick="resetForm()">Reset</button>
+            <button type="button" class="btn" style="background:#007bff" onclick="submitData('save')">Save</button>
+            <button type="button" class="btn" style="background:#fd7e14" onclick="submitData('update')">Update</button>
+        </div>
+    </form>
+</div>
 
-        function submitData(action) {
-            let data = {
-                action: action,
-                key: "shanzone_admin_786",
-                row: document.getElementById('rowIdx').value,
-                userid: document.getElementById('userid').value,
-                devicename: document.getElementById('devicename').value,
-                deviceip: document.getElementById('deviceip').value,
-                user: document.getElementById('user').value,
-                password: document.getElementById('password').value,
-                modelno: document.getElementById('modelno').value,
-                macaddr: document.getElementById('macaddr').value
-            };
+<script>
+    // API Key Security
+    const _0x1a2 = ["", "c2hhbl9zZWN1cmVfNzg2"]; 
+    function _v(encoded) { return atob(encoded); }
 
-            let qs = Object.keys(data).map(k => `${k}=${encodeURIComponent(data[k])}`).join('&');
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzARBHv8cnMhzAvYKNSYz3ffm_8tn6gdbQEqjLLZJQjvdsimFaSt916A0TbUTWrYWHHfg/exec";
 
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: qs
-            })
-            .then(res => res.text()).then(msg => { alert(msg); if(action === 'save') resetForm(); });
-        }
+    function submitData(action) {
+        let params = new URLSearchParams(new FormData(document.getElementById('deviceForm')));
+        params.append("action", action);
+        params.append("key", _v(_0x1a2[1])); 
+        params.append("row", document.getElementById('rowIdx').value);
+        
+        fetch(SCRIPT_URL, { method: 'POST', body: params })
+        .then(res => res.text()).then(msg => { alert(msg); if(action === 'save') resetForm(); });
+    }
 
-        function searchData() {
-            let id = document.getElementById('searchId').value;
-            fetch(`${SCRIPT_URL}?id=${id}&key=shanzone_admin_786`)
-            .then(res => res.json()).then(data => {
-                if(data.error) alert(data.error);
-                else {
-                    for (let key in data) { if(document.getElementById(key)) document.getElementById(key).value = data[key]; }
-                    document.getElementById('rowIdx').value = data.row;
+    function searchData() {
+        let id = document.getElementById('searchId').value;
+        let key = _v(_0x1a2[1]);
+        fetch(`${SCRIPT_URL}?id=${id}&key=${key}`)
+        .then(res => res.json()).then(data => {
+            if(data === "Not Found") alert("Not Found");
+            else {
+                for (let key in data) {
+                    if(document.getElementById(key)) document.getElementById(key).value = data[key];
                 }
-            });
-        }
-        function resetForm() { document.getElementById('deviceForm').reset(); document.getElementById('rowIdx').value = ""; }
-    </script>
+                document.getElementById('rowIdx').value = data.row;
+            }
+        });
+    }
+
+    function resetForm() { document.getElementById('deviceForm').reset(); document.getElementById('rowIdx').value = ""; }
+</script>
+
 </body>
 </html>
