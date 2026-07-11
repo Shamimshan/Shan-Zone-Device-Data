@@ -50,7 +50,9 @@
 <div class="portal-container">
     <div class="header-section">
         <h1>SHAN ZONE</h1>
-        <p>Malmaliya Urf Sirsia, Partawal Bazar, Maharajganj (U.P.) 273301 | Device Management Portal</p>
+        <h1>Device Managament Portal</h1>
+        <p>Malmaliya Urf Sirsia, Partawal Bazar, Maharajganj (U.P.) 273301</p>
+        <p>Mobile: 6391224488, 9984389923, Email: shanzones1313@gmail.com</p>
     </div>
     
     <div class="search-bar no-print">
@@ -63,7 +65,7 @@
         
         <div class="section-title">General Information</div>
         <div class="form-grid">
-            <div class="input-group"><label>S. No.</label><input type="text" id="sno" name="sno" readonly></div>
+            <div class="input-group"><label>S. No.</label><input type="text" id="sno" name="sno" readonly placeholder="Loading S.No..."></div>
             <div class="input-group"><label>Date & Time</label><input type="text" id="datetime" name="datetime" readonly></div>
             <div class="input-group"><label>User ID *</label><input type="text" id="userid" name="userid" required></div>
             <div class="input-group"><label>Username</label><input type="text" id="user" name="user"></div>
@@ -88,8 +90,8 @@
             <div class="input-group"><label>Link Type</label>
                 <select id="linktype" name="linktype">
                     <option value="">Select...</option>
-                    <option value="Fiber">Fiber</option>
-                    <option value="Wireless">Wireless</option>
+                    <option value="Fiber">PtP</option>
+                    <option value="Wireless">PtMP</option>
                 </select>
             </div>
             <div class="input-group"><label>RX / TX</label><input type="text" id="rxtx" name="rxtx"></div>
@@ -133,11 +135,12 @@
 </div>
 
 <script>
-    // Security
+    // Security Check
     window.onload = function() {
         let pass = prompt("Enter Admin Password:");
         if(pass === "ShanAdmin2026") {
             document.body.style.display = 'block';
+            fetchInitialData(); // Load S.No and Date/Time upon successful login
         } else {
             alert("Unauthorized Access!");
             window.location.reload();
@@ -146,8 +149,11 @@
 
     const _0x1a2 = ["", "c2hhbl9zZWN1cmVfNzg2"]; 
     function _v(encoded) { return atob(encoded); }
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzARBHv8cnMhzAvYKNSYz3ffm_8tn6gdbQEqjLLZJQjvdsimFaSt916A0TbUTWrYWHHfg/exec";
+    
+    // Updated New Google Sheet App Script URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbymhYbwBDmyEqqABmsMb37BMJH4dyaDlGXswXEcyK9HiSBuKCQwXRpv-Nh5y9kEuKsUog/exec";
 
+    // Copy Function
     function copyToClip(id) {
         let text = document.getElementById(id);
         text.select();
@@ -155,7 +161,37 @@
         alert("Copied: " + text.value);
     }
 
+    // Auto-fetch S.No and Set Date
+    function fetchInitialData() {
+        // Set Current Date & Time
+        let now = new Date();
+        document.getElementById('datetime').value = now.toLocaleString('en-GB');
+
+        // Fetch Last S.No from Server
+        let key = _v(_0x1a2[1]);
+        fetch(`${SCRIPT_URL}?action=getlastno&key=${key}`)
+        .then(res => res.text())
+        .then(lastSno => {
+            if(lastSno && lastSno.includes('SZ')) {
+                let nextNo = parseInt(lastSno.replace('SZ', '')) + 1;
+                document.getElementById('sno').value = "SZ" + nextNo;
+            } else {
+                document.getElementById('sno').value = "SZ2400"; // Default Fallback
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('sno').value = "Network Error";
+        });
+    }
+
+    // Submit Data
     function submitData(action, shouldPrint = false) {
+        if(!document.getElementById('userid').value) {
+            alert("Please enter User ID!");
+            return;
+        }
+
         let params = new URLSearchParams(new FormData(document.getElementById('deviceForm')));
         params.append("action", action);
         params.append("key", _v(_0x1a2[1])); 
@@ -173,12 +209,14 @@
         });
     }
 
+    // Save and Print Action
     function saveAndPrint() {
         let rowVal = document.getElementById('rowIdx').value;
         let action = rowVal ? 'update' : 'save'; 
         submitData(action, true);
     }
 
+    // Search Data
     function searchData() {
         let id = document.getElementById('searchId').value;
         if(!id) { alert("Please enter User ID"); return; }
@@ -187,19 +225,24 @@
         fetch(`${SCRIPT_URL}?id=${id}&key=${key}`)
         .then(res => res.json()).then(data => {
             if(data === "Not Found") {
-                alert("Not Found");
+                alert("Not Found in Database");
             } else {
                 for (let key in data) {
-                    if(document.getElementById(key)) document.getElementById(key).value = data[key];
+                    if(document.getElementById(key)) {
+                        document.getElementById(key).value = data[key];
+                    }
                 }
                 document.getElementById('rowIdx').value = data.row;
             }
         });
     }
 
+    // Reset Form
     function resetForm() { 
         document.getElementById('deviceForm').reset(); 
         document.getElementById('rowIdx').value = ""; 
+        document.getElementById('searchId').value = "";
+        fetchInitialData(); // Reload Date and new S.No
     }
 </script>
 
