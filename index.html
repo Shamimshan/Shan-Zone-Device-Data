@@ -622,9 +622,17 @@
         function callServer(functionName, data={}){
             showLoading();
             return new Promise((resolve,reject)=>{
+                if(CONFIG.API_URL === "") {
+                    hideLoading();
+                    alert("Error: Aapne API URL setup nahi kiya hai. Code me apna Web App URL dalein.");
+                    reject("Google Script Not Connected");
+                    return;
+                }
+                
                 fetch(CONFIG.API_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
+                    redirect: 'follow', // <-- YEH FIX ADD KIYA GAYA HAI
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({ action: functionName, payload: data })
                 })
                 .then(res => res.json())
