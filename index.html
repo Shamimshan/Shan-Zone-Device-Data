@@ -15,12 +15,12 @@
         :root{ --primary:#0A192F; --secondary:#132F4C; --accent:#00B4D8; --success:#16A34A; --danger:#DC2626; --warning:#F59E0B; --white:#FFFFFF; --light:#F4F7FC; --border:#DDE3EC; --text:#2D3748; --shadow:0 12px 35px rgba(0,0,0,.08); --radius:14px; --transition:.30s; }
         *{ margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
         html{ scroll-behavior:smooth; }
-        body{ background:#eef3f8; color:var(--text); } /* Removed display:none from here for safety */
+        body{ background:#eef3f8; color:var(--text); } 
         ::-webkit-scrollbar{ width:10px; }
         ::-webkit-scrollbar-track{ background:#f2f2f2; }
         ::-webkit-scrollbar-thumb{ background:var(--primary); border-radius:50px; }
         ::-webkit-scrollbar-thumb:hover{ background:#041322; }
-        .app-container{ width:100%; max-width:1400px; margin:30px auto; padding:20px; display:none; } /* App container hidden by default */
+        .app-container{ width:100%; max-width:1400px; margin:30px auto; padding:20px; display:none; } 
         .login-overlay{ position:fixed; left:0; top:0; width:100%; height:100%; background:linear-gradient(135deg,#041322,#0A192F,#173D63); display:flex; justify-content:center; align-items:center; z-index:99999; }
         .login-card{ width:420px; background:#fff; border-radius:18px; padding:40px; box-shadow:0 20px 60px rgba(0,0,0,.25); animation:popup .4s ease; }
         @keyframes popup{ from{ transform:translateY(40px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
@@ -73,7 +73,7 @@
         .form-group input, .form-group select, .form-group textarea{ width:100%; border:1px solid var(--border); border-radius:10px; padding:12px 15px; font-size:15px; outline:none; transition:var(--transition); background:#fff; }
         .form-group input{ height:50px; } .form-group textarea{ resize:vertical; min-height:120px; }
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus{ border-color:var(--accent); box-shadow:0 0 0 4px rgba(0,180,216,.15); }
-        .form-group input[readonly]{ background:#f7f9fc; cursor:not-allowed; }
+        .form-group input[readonly]{ background:#f7f9fc; cursor:not-allowed; font-weight:600; color:var(--primary); }
         .input-action, .password-box{ position:relative; display:flex; align-items:center; }
         .input-action input, .password-box input{ padding-right:90px; }
         .field-btn{ position:absolute; right:8px; width:34px; height:34px; border:none; border-radius:8px; background:#eef3f8; cursor:pointer; transition:var(--transition); display:flex; justify-content:center; align-items:center; color:#444; }
@@ -113,10 +113,14 @@
         @media print{ body{ background:#fff; display:block !important; } .login-overlay, .loading-overlay, .search-section, .footer, .action-section, .toast, .modal, .icon-btn{ display:none !important; } .app-container{ margin:0; padding:0; max-width:100%; } .form-section, .dashboard-card, .company-card, .main-header{ box-shadow:none; border:1px solid #ddd; } input, textarea, select{ border:none !important; background:transparent !important; padding:4px 0 !important; } }
         .hidden{ display:none !important; } .text-center{ text-align:center; } .mt-20{ margin-top:20px; } .mb-20{ margin-bottom:20px; } .w-100{ width:100%; }
         
-        /* Dark Mode (Basic) */
+        /* Dark Mode */
         body.dark-mode { background: #0f172a; color: #fff; }
         body.dark-mode .company-card, body.dark-mode .dashboard-card, body.dark-mode .search-card, body.dark-mode .form-section, body.dark-mode .main-header { background: #1e293b; border: 1px solid #334155; }
         body.dark-mode input, body.dark-mode select, body.dark-mode textarea { background: #0f172a; color: #fff; border-color: #334155; }
+        body.dark-mode .section-heading, body.dark-mode .company-card h3, body.dark-mode .search-title, body.dark-mode .header-left h1 { color: #fff; }
+        body.dark-mode label, body.dark-mode .header-left span, body.dark-mode .company-card p { color: #cbd5e1; }
+        body.dark-mode .card-content h4 { color: #cbd5e1; }
+        body.dark-mode .card-content span { color: #fff; }
     </style>
 </head>
 <body>
@@ -237,7 +241,7 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>S. No.</label>
-                        <input type="text" id="sno" name="sno" readonly>
+                        <input type="text" id="sno" name="sno" readonly placeholder="Fetching...">
                     </div>
                     <div class="form-group">
                         <label>Date</label>
@@ -420,8 +424,8 @@
         const CONFIG = {
             ENCRYPTED_PASS: "U0hBTlpPTkVAMjAyNg==", 
             
-            // MAHA ZAROORI: Apna naya deploy kiya hua App script web App ka link iske ander paste karein!
-            API_URL: "https://script.google.com/macros/s/AKfycbyUql2WWao2qb1AfRWMhgcQume1OhAtIDaVlhIxYAgL88pGQSYDRLJXv6rJA2aQpVHuDg/exec", 
+            // Updated Google Script Web App URL
+            API_URL: "https://script.google.com/macros/s/AKfycbyvr8Fa0FCEpiOt_rcXgX91V7GVeI5pvZXGyEEyO42ALv3lMq0-yfe8Aicrqa_DnkPXsQ/exec", 
             
             STORAGE_KEY: "shan_zone_login"
         };
@@ -437,10 +441,10 @@
             setupCopyButtons();
             setupButtons();
             setCurrentDate();
-            generateSerialNumber();
-            // Sirf tab load karo jab logged in ho
+            
             if(localStorage.getItem(CONFIG.STORAGE_KEY) === "true"){
                 updateDashboard();
+                generateSerialNumber(); // Fetch Auto Serial Number on load
             }
         }
 
@@ -467,16 +471,16 @@
                 showApplication();
                 showToast("Login Successful","success");
                 loadDashboardData();
+                generateSerialNumber(); // Fetch Auto Serial Number after login
             } else {
                 document.getElementById("loginError").innerHTML = "❌ Invalid Password";
             }
         });
 
-        // Logout functionality add ki gayi hai
         document.getElementById("logoutBtn")?.addEventListener("click",()=>{
             localStorage.removeItem(CONFIG.STORAGE_KEY);
             showLogin();
-            document.getElementById("portalPassword").value = ""; // Clear password field
+            document.getElementById("portalPassword").value = ""; 
             showToast("Logged Out Successfully","success");
         });
 
@@ -508,12 +512,29 @@
             }
         }
 
-        function generateSerialNumber(){
-            let sno = document.getElementById("sno");
-            if(!sno) return;
-            let old = localStorage.getItem("shan_sno");
-            if(old) sno.value = Number(old)+1;
-            else sno.value = 1;
+        // ==========================================
+        // AUTO SERIAL NUMBER LOGIC
+        // ==========================================
+        function generateSerialNumber() {
+            let snoInput = document.getElementById('sno');
+            if(!snoInput) return;
+            
+            snoInput.value = "Fetching...";
+            
+            fetch(`${CONFIG.API_URL}?action=getlastno`)
+            .then(res => res.text())
+            .then(lastSno => {
+                if(lastSno && lastSno.includes('SZ')) {
+                    let nextNo = parseInt(lastSno.replace('SZ', '')) + 1;
+                    snoInput.value = "SZ" + nextNo;
+                } else {
+                    snoInput.value = "SZ2401"; // Default Fallback
+                }
+            })
+            .catch(err => {
+                console.error("Network Error: ", err);
+                snoInput.value = "SZ2401"; 
+            });
         }
 
         function setupCopyButtons(){
@@ -539,7 +560,7 @@
             let form = document.getElementById("deviceForm");
             if(form) form.reset();
             setCurrentDate();
-            generateSerialNumber();
+            generateSerialNumber(); // Fetch fresh serial number after reset
             removeValidation();
             showToast("Form Reset","success");
         }
@@ -601,13 +622,6 @@
         function callServer(functionName, data={}){
             showLoading();
             return new Promise((resolve,reject)=>{
-                if(CONFIG.API_URL === "") {
-                    hideLoading();
-                    alert("Error: Aapne API URL setup nahi kiya hai. Code me apna Web App URL dalein.");
-                    reject("Google Script Not Connected");
-                    return;
-                }
-                
                 fetch(CONFIG.API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain' },
