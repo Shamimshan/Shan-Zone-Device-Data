@@ -6,58 +6,442 @@
   <title>SHAN ZONE Device Management Portal</title>
   <style>
     :root{--ink:#172033;--muted:#667085;--line:#e6e9ef;--brand:#146c43;--brand-dark:#0b4a2d;--bg:#f5f7fb;--card:#fff;--danger:#b42318;--warn:#b54708;--shadow:0 8px 22px rgba(16,24,40,.07)}
-    *{box-sizing:border-box} body{margin:0;font:14px/1.45 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)} button,input,select,textarea{font:inherit} button{cursor:pointer;border:0}.hidden{display:none!important}
-    #app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:245px;padding:24px 14px;background:#10251a;color:#eaf6ef;z-index:3}.brand{padding:5px 12px 25px;font-weight:800;letter-spacing:.4px;font-size:18px}.brand small{display:block;font-size:10px;letter-spacing:1.6px;color:#9ac5aa;margin-top:3px}.nav{width:100%;text-align:left;background:transparent;color:#c6dfce;padding:12px;border-radius:9px;margin:3px 0}.nav:hover,.nav.active{background:#216143;color:white}.nav .icon{display:inline-block;width:25px}.sidebar-footer{position:absolute;bottom:23px;left:14px;right:14px}.main{margin-left:245px;padding:28px;max-width:1700px}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}.topbar h1{font-size:23px;margin:0}.topbar p{margin:3px 0 0;color:var(--muted)}.user-actions{display:flex;gap:10px;align-items:center;color:var(--muted)}
-    .grid{display:grid;gap:17px}.cards{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:24px}.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:19px;box-shadow:var(--shadow)}.metric{font-size:30px;font-weight:750;margin:6px 0}.muted{color:var(--muted)}.metric-label{color:var(--muted);font-size:13px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;background:#98a2b3}.dot.online{background:#12b76a}.dot.offline{background:#f04438}.dot.unknown{background:#f79009}
-    .panel{background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}.panel-head h2{font-size:16px;margin:0}.panel-body{padding:19px}.two-col{grid-template-columns:1.2fr .8fr}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:700px}th,td{padding:11px 13px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}th{font-size:11px;text-transform:uppercase;letter-spacing:.55px;color:var(--muted);background:#fafbfc}td{font-size:13px}.empty{text-align:center;color:var(--muted);padding:32px!important}.status{display:inline-block;padding:3px 8px;border-radius:99px;font-size:12px;font-weight:600;background:#f2f4f7;color:#475467}.status.online{background:#e7f8ef;color:#067647}.status.offline{background:#fef0f0;color:#b42318}.status.unknown{background:#fffaeb;color:#b54708}
-    .btn{padding:9px 13px;border-radius:8px;background:#edf1f7;color:#344054;font-weight:600}.btn:hover{filter:brightness(.97)}.btn.primary{background:var(--brand);color:#fff}.btn.primary:hover{background:var(--brand-dark)}.btn.danger{background:#fee4e2;color:var(--danger)}.btn.small{padding:6px 9px;font-size:12px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;padding:0 0 17px}.toolbar input,.toolbar select{border:1px solid #d0d5dd;padding:9px 11px;border-radius:8px;background:#fff;min-width:150px}.toolbar input{flex:1;min-width:220px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:12px;font-weight:650;color:#344054}.field input,.field select,.field textarea{width:100%;border:1px solid #d0d5dd;border-radius:8px;padding:9px 10px;background:white}.field input:read-only{background:#f2f4f7;color:#667085}.field textarea{height:75px;resize:vertical}.hint{font-size:11px;color:var(--muted)}.actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
-    .view{display:none}.view.active{display:block}.service-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:850px}.service-state{font-weight:700;font-size:18px;margin:8px 0}.modal-wrap{position:fixed;inset:0;background:rgba(16,24,40,.55);display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}.modal{width:min(720px,100%);max-height:94vh;overflow:auto;background:white;border-radius:14px;box-shadow:0 25px 55px rgba(0,0,0,.22)}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:18px 21px;border-bottom:1px solid var(--line)}.modal-head h2{font-size:18px;margin:0}.close{font-size:22px;background:transparent;color:#667085;padding:0 5px}.modal-body{padding:20px}.login{width:min(390px,100%);padding:30px}.login-logo{font-size:22px;font-weight:800;color:var(--brand);margin-bottom:8px}.login h1{font-size:21px;margin:0 0 5px}.login p{color:var(--muted);margin:0 0 24px}.login input{width:100%;padding:11px;border:1px solid #d0d5dd;border-radius:8px;margin-bottom:12px}.login .btn{width:100%;padding:11px}.toast{position:fixed;right:22px;bottom:22px;padding:12px 15px;border-radius:9px;background:#1d2939;color:#fff;z-index:30;box-shadow:var(--shadow)}.toast.error{background:#b42318}.toast.success{background:#067647}
-    @media(max-width:900px){.sidebar{width:58px;padding:17px 8px}.brand{font-size:0;padding:5px 7px 22px}.brand:before{content:"SZ";font-size:16px}.brand small,.nav span:not(.icon),.sidebar-footer .btn:not(.icon){display:none}.nav{padding:12px 10px}.sidebar-footer{left:8px;right:8px}.main{margin-left:58px;padding:20px}.cards{grid-template-columns:repeat(2,1fr)}.two-col,.service-grid{grid-template-columns:1fr}}@media(max-width:560px){.main{padding:14px}.topbar{align-items:flex-start}.topbar p,.user-actions span{display:none}.cards{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel-head{align-items:flex-start;flex-direction:column}.toolbar{width:100%}.toolbar input,.toolbar select{width:100%}}
+    *{box-sizing:border-box} body{margin:0;font:14px/1.45 Inter,system-ui,-apple-system,"Segoe UI\",sans-serif;background:var(--bg);color:var(--ink)} button,input,select,textarea{font:inherit} button{cursor:pointer;border:0}.hidden{display:none!important}
+    #app{min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:245px;padding:24px 14px;background:#10251a;color:#eaf6ef;z-index:3}.brand{padding:5px 12px 25px;font-weight:800;letter-spacing:.4px;font-size:18px}
+    .nav{display:flex;align-items:center;gap:10px;padding:10px 12px;color:#b2d7c5;text-decoration:none;border-radius:6px;margin-bottom:4px;font-weight:500;transition:.2s}
+    .nav:hover,.nav.active{background:rgba(255,255,255,.08);color:#fff}
+    .main{margin-left:245px;padding:40px}
+    .header{display:flex;justify-content:between;align-items:center;margin-bottom:32px}.title{margin:0;font-size:24px;font-weight:700}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-bottom:32px}
+    .card{background:var(--card);padding:24px;border-radius:12px;border:1px solid var(--line);box-shadow:var(--shadow)}
+    .card-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin-bottom:6px}
+    .card-val{font-size:28px;font-weight:700;color:var(--ink)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 16px;font-weight:600;border-radius:6px;transition:.15s;font-size:13.5px}
+    .btn-p{background:var(--brand);color:#fff}.btn-p:hover{background:var(--brand-dark)}
+    .btn-o{background:#fff;border:1px solid var(--line);color:var(--ink)}.btn-o:hover{background:#f9fafb}
+    .btn-d{background:#fef3f2;color:var(--danger)}.btn-d:hover{background:#fee2e2}
+    .table-box{background:var(--card);border-radius:12px;border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden}
+    .toolbar{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;gap:12px;background:#fcfdfe;align-items:center}
+    .input{padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);outline:0;transition:.15s}.input:focus{border-color:var(--brand)}
+    table{width:100%;border-collapse:collapse;text-align:left} th{background:#f8fafc;padding:12px 20px;font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;border-bottom:1px solid var(--line)}
+    td{padding:14px 20px;border-bottom:1px solid var(--line);vertical-align:middle} tr:last-child td{border:0}
+    .badge{display:inline-flex;padding:2px 8px;font-size:11px;font-weight:600;border-radius:10px;text-transform:uppercase}
+    .badge-on{background:#ecfdf3;color:#027a48} .badge-off{background:#fef3f2;color:var(--danger)} .badge-unk{background:#f2f4f7;color:#344054}
+    .modal-bg{position:fixed;inset:0;background:rgba(9,26,16,.5);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100}
+    .modal{background:#fff;border-radius:14px;width:100%;max-width:540px;box-shadow:0 20px 40px rgba(0,0,0,.15);overflow:hidden}
+    .modal-h{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:between;align-items:center}
+    .modal-t{margin:0;font-size:18px;font-weight:700} .modal-b{padding:24px;display:flex;flex-direction:column;gap:16px}
+    .modal-f{padding:16px 24px;background:#f8fafc;border-top:1px solid var(--line);display:flex;justify-content:end;gap:12px}
+    .f-grp{display:flex;flex-direction:column;gap:6px} .f-grp label{font-weight:600;font-size:12.5px;color:#344054}
+    .toast-box{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;z-index:200}
+    .toast{padding:12px 20px;border-radius:8px;color:#fff;font-weight:600;box-shadow:0 8px 16px rgba(0,0,0,.1);display:flex;align-items:center;gap:10px;animation:slideIn .2s ease}
+    @keyframes slideIn{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
   </style>
 </head>
 <body>
-  <div id="loginModal" class="modal-wrap"><form id="loginForm" class="modal login"><div class="login-logo">SHAN ZONE</div><h1>Device Management Portal</h1><p>Sign in to manage and monitor your network devices.</p><input id="loginPassword" type="password" placeholder="Portal password" autocomplete="current-password" required><button class="btn primary" type="submit">Sign in</button></form></div>
-  <div id="app" class="hidden">
-    <aside class="sidebar"><div class="brand">SHAN ZONE<small>DEVICE PORTAL V1.0</small></div><button class="nav active" data-view="dashboard"><span class="icon">▦</span><span>Dashboard</span></button><button class="nav" data-view="devices"><span class="icon">◈</span><span>Devices</span></button><button class="nav" data-view="monitoring"><span class="icon">◉</span><span>Monitoring</span></button><button class="nav" data-view="genieacs"><span class="icon">⌁</span><span>GenieACS</span></button><button class="nav" data-view="logs"><span class="icon">☷</span><span>Activity Logs</span></button><div class="sidebar-footer"><button id="logoutBtn" class="nav"><span class="icon">↪</span><span>Logout</span></button></div></aside>
-    <main class="main"><header class="topbar"><div><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Network overview and recent activity</p></div><div class="user-actions"><span>ADMIN</span><button id="quickAdd" class="btn primary">+ Add Device</button></div></header>
-      <section id="dashboard" class="view active"><div id="metricCards" class="grid cards"></div><div class="grid two-col"><div class="panel"><div class="panel-head"><h2>Recent Devices</h2><button class="btn small" data-go="devices">View all</button></div><div class="table-wrap"><table><thead><tr><th>User ID</th><th>Device</th><th>Link Type</th><th>Status</th></tr></thead><tbody id="recentDevices"></tbody></table></div></div><div class="panel"><div class="panel-head"><h2>Recent Activity</h2><button class="btn small" data-go="logs">View logs</button></div><div class="table-wrap"><table><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead><tbody id="recentLogs"></tbody></table></div></div></div></section>
-      <section id="devices" class="view"><div class="panel"><div class="panel-body"><div class="toolbar"><input id="deviceSearch" placeholder="Search User ID, device, IP or location"><select id="filterLinkType"><option value="">All Link Types</option><option>CPE</option><option>PTP</option><option>PTMP</option><option>Bridge</option><option>OLT</option><option>Switch</option><option>Router</option><option>Camera</option><option>Other</option></select><select id="filterStatus"><option value="">All Status</option><option>Online</option><option>Offline</option><option>Unknown</option></select><button id="newDeviceBtn" class="btn primary">+ Add Device</button></div><div class="table-wrap"><table><thead><tr><th>User ID</th><th>Device</th><th>IP</th><th>Link Type</th><th>Location</th><th>Status</th><th>Last Sync</th><th></th></tr></thead><tbody id="devicesTable"></tbody></table></div></div></div></section>
-      <section id="monitoring" class="view"><div class="grid service-grid"><div class="card"><div class="metric-label">VPS Monitoring Server</div><div id="monitoringState" class="service-state">Checking…</div><p id="monitoringMessage" class="muted">Please wait.</p><button id="monitoringRefresh" class="btn">Refresh status</button> <button id="monitoringSync" class="btn primary">Send devices to VPS</button></div><div class="card"><div class="metric-label">How it works</div><p class="muted">The portal sends devices with an IP address to your VPS. The VPS returns Online/Offline results, which update the Device list.</p><p class="hint">Required VPS routes: <code>GET /health</code> and <code>POST /api/targets</code>.</p></div></div></section>
-      <section id="genieacs" class="view"><div class="grid service-grid"><div class="card"><div class="metric-label">GenieACS Connection</div><div id="genieacsState" class="service-state">Checking…</div><p id="genieacsMessage" class="muted">Please wait.</p><button id="genieacsRefresh" class="btn primary">Test connection &amp; sync count</button></div><div class="card"><div class="metric-label">Setup</div><p class="muted">Set GenieACSUrl, GenieACSUser, and GenieACSPassword in the Settings sheet. The portal uses the GenieACS API from Apps Script.</p></div></div></section>
-      <section id="logs" class="view"><div class="panel"><div class="panel-head"><h2>Last 100 activity records</h2><button id="logsRefresh" class="btn">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>Date &amp; Time</th><th>User</th><th>Action</th><th>Details</th></tr></thead><tbody id="logsTable"></tbody></table></div></div></section>
-    </main>
+
+  <iframe id="rpc_iframe" name="rpc_iframe" class="hidden"></iframe>
+
+  <div id="toastContainer" class="toast-box"></div>
+
+  <div id="loginModal" class="modal-bg">
+    <div class="modal" style="max-width:380px; padding:8px;">
+      <div class="modal-b" style="gap:20px; text-align:center;">
+        <div style="font-size:26px; font-weight:800; color:var(--brand); margin-top:10px;">SHAN ZONE</div>
+        <p style="color:var(--muted); margin:0; font-size:13px; margin-top:-10px;">Device Management Portal Secure Gate</p>
+        <form id="loginForm" style="display:flex; flex-direction:column; gap:14px; text-align:left;">
+          <div class="f-grp">
+            <label for="loginPassword">Portal Access Password</label>
+            <input type="password" id="loginPassword" class="input" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-p" style="width:100%; padding:11px;">Verify Identity</button>
+        </form>
+      </div>
+    </div>
   </div>
-  <div id="deviceModal" class="modal-wrap hidden"><div class="modal"><div class="modal-head"><h2 id="deviceModalTitle">Add Device</h2><button class="close" data-close="deviceModal">×</button></div><form id="deviceForm" class="modal-body"><input id="originalUserId" type="hidden"><div class="form-grid"><div class="field"><label>Link Type *</label><select id="linkType" required><option value="">Select type</option><option>CPE</option><option>PTP</option><option>PTMP</option><option>Bridge</option><option>OLT</option><option>Switch</option><option>Router</option><option>Camera</option><option>Other</option></select></div><div class="field"><label>User ID *</label><input id="userId" placeholder="Select Link Type first" readonly required><span id="userIdHint" class="hint">Auto-generated for non-CPE devices.</span></div><div class="field"><label>Device Name *</label><input id="deviceName" required placeholder="e.g. Main Office Switch"></div><div class="field"><label>Device IP / Hostname</label><input id="deviceIp" placeholder="e.g. 192.168.1.1"></div><div class="field"><label>Username</label><input id="username" autocomplete="off"></div><div class="field"><label>Password</label><input id="devicePassword" type="password" autocomplete="new-password"></div><div class="field"><label>Location</label><input id="location" placeholder="e.g. Shan Zone Tower"></div><div class="field"><label>TR069</label><select id="tr069"><option>Disable</option><option>Enable</option></select></div><div class="field"><label>ACS Address</label><input id="acsAddress" placeholder="Optional ACS address"></div><div class="field"><label><span>Status</span></label><select id="status"><option>Unknown</option><option>Online</option><option>Offline</option></select></div><div class="field full"><label>Remarks</label><textarea id="remarks" placeholder="Optional notes"></textarea></div></div><div class="actions"><button type="button" class="btn" data-close="deviceModal">Cancel</button><button id="saveDeviceBtn" type="submit" class="btn primary">Save Device</button></div></form></div></div>
-  <div id="toast" class="toast hidden"></div>
+
+  <div id="app" class="hidden">
+    <div class="sidebar">
+      <div class="brand">SHAN ZONE v1.0</div>
+      <nav>
+        <a href="#" class="nav active" data-view="dashboard">Dashboard</a>
+        <a href="#" class="nav" data-view="devices">Network Operations</a>
+        <a href="#" class="nav" data-view="genieacs">GenieACS Remote</a>
+        <a href="#" class="nav" data-view="monitoring">Monitoring Engine</a>
+        <a href="#" class="nav" data-view="logs">Audit Logs</a>
+      </nav>
+      <div style="position:absolute; bottom:20px; left:14px; right:14px;">
+        <button id="logoutBtn" class="btn btn-o" style="width:100%; color:var(--danger); justify-content:center; border-color:rgba(255,255,255,0.15); background:transparent;">Disconnect Portal</button>
+      </div>
+    </div>
+
+    <div class="main">
+      <div id="view-dashboard" class="view-pane">
+        <div class="header">
+          <h1 class="title">Operational Dashboard</h1>
+          <button id="quickAdd" class="btn btn-p">Provision Device</button>
+        </div>
+        <div class="grid">
+          <div class="card"><div class="card-label">Total Elements</div><div id="dash-total" class="card-val">0</div></div>
+          <div class="card" style="border-left:4px solid var(--brand)"><div class="card-label">Online Nodes</div><div id="dash-online" class="card-val" style="color:var(--brand)">0</div></div>
+          <div class="card" style="border-left:4px solid var(--danger)"><div class="card-label">Offline Outages</div><div id="dash-offline" class="card-val" style="color:var(--danger)">0</div></div>
+        </div>
+      </div>
+
+      <div id="view-devices" class="view-pane hidden">
+        <div class="header">
+          <h1 class="title">Network Inventory Matrix</h1>
+          <button id="newDeviceBtn" class="btn btn-p">Register New Hardware</button>
+        </div>
+        <div class="table-box">
+          <div class="toolbar">
+            <input type="text" id="deviceSearch" class="input" placeholder="Filter parameters..." style="width:280px;">
+            <select id="filterLinkType" class="input"><option value="">All Architectures</option></select>
+            <select id="filterStatus" class="input">
+              <option value="">All Health Statuses</option>
+              <option value="ONLINE">ONLINE</option>
+              <option value="OFFLINE">OFFLINE</option>
+              <option value="UNKNOWN">UNKNOWN</option>
+            </select>
+          </div>
+          <div style="overflow-x:auto;">
+            <table id="deviceTable">
+              <thead>
+                <tr><th>S.No</th><th>User Identity</th><th>Node Reference</th><th>IP Configuration</th><th>Credentials</th><th>Link Context</th><th>Location</th><th>TR069</th><th>State</th><th>Actions</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="view-genieacs" class="view-pane hidden">
+        <div class="header"><h1 class="title">GenieACS TR-069 Session Proxy</h1><button id="genieacsRefresh" class="btn btn-o">Polling Registry</button></div>
+        <div class="table-box" style="padding:24px;"><p style="color:var(--muted)">Active TR-069 auto-configuration cross-reference engine operational.</p></div>
+      </div>
+
+      <div id="view-monitoring" class="view-pane hidden">
+        <div class="header">
+          <h1 class="title">ICMP Core Watchdog Diagnostics</h1>
+          <div style="display:flex; gap:10px;">
+            <button id="monitoringRefresh" class="btn btn-o">Refresh UI</button>
+            <button id="monitoringSync" class="btn btn-p">Synchronize VPS Targets</button>
+          </div>
+        </div>
+        <div class="table-box" style="padding:24px;"><p style="color:var(--muted)">Real-time continuous state updates synced over standalone API endpoint infrastructure.</p></div>
+      </div>
+
+      <div id="view-logs" class="view-pane hidden">
+        <div class="header"><h1 class="title">System Transaction Ledger</h1><button id="logsRefresh" class="btn btn-o">Roll History</button></div>
+        <div class="table-box">
+          <table id="logsTable">
+            <thead><tr><th>Execution Timestamp</th><th>Subsystem Action</th><th>Transaction Context Trace</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="deviceModal" class="modal-bg hidden">
+    <div class="modal">
+      <div class="modal-h"><h3 id="modalTitle" class="modal-t">Register Node</h3><button data-close style="background:transparent; font-size:20px; color:var(--muted); font-weight:300;">&times;</button></div>
+      <form id="deviceForm">
+        <input type="hidden" id="deviceSNo">
+        <div class="modal-b" style="grid-template-columns:1fr 1fr; display:grid;">
+          <div class="f-grp"><label>Link Architecture Context</label><select id="linkType" class="input" required></select></div>
+          <div class="f-grp"><label>Assigned User Identifier</label><input type="text" id="userId" class="input" placeholder="Automatic Sequence Generation" readonly></div>
+          <div class="f-grp" style="grid-column:span 2"><label>Device Descriptive Label</label><input type="text" id="deviceName" class="input" required></div>
+          <div class="f-grp"><label>Network Host / IP Pointer</label><input type="text" id="deviceIp" class="input" required></div>
+          <div class="f-grp"><label>Management Authentication User</label><input type="text" id="deviceUser" class="input"></div>
+          <div class="f-grp"><label>Management Authentication Pass</label><input type="text" id="devicePass" class="input"></div>
+          <div class="f-grp"><label>Physical / Regional Coordinates</label><input type="text" id="deviceLocation" class="input"></div>
+          <div class="f-grp" style="grid-column:span 2"><label>Operational Remarks & Context</label><textarea id="deviceRemarks" class="input" rows="2"></textarea></div>
+        </div>
+        <div class="modal-f"><button type="button" data-close class="btn btn-o">Abort</button><button type="submit" class="btn btn-p">Commit State</button></div>
+      </form>
+    </div>
+  </div>
+
   <script>
-    // Paste the /exec URL from your Apps Script Web App deployment here.
-    const API_URL='https://script.google.com/macros/s/AKfycbwTptkSP-87tYFCgGAFqXNe2sqLvE0usXyVDGy28R6rGK7eMbIVx6U3EOi-V1LXAx1dyA/exec';
-    const state={token:localStorage.getItem('shanZoneToken')||'',devices:[],editing:false};
-    const titles={dashboard:['Dashboard','Network overview and recent activity'],devices:['Devices','Create, search, and maintain device records'],monitoring:['Monitoring','VPS health and device ping synchronization'],genieacs:['GenieACS','Connection status and device count'],logs:['Activity Logs','Recent portal and system events']};
-    const $=id=>document.getElementById(id); const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
-    const pendingRequests=new Map();
-    window.addEventListener('message',event=>{const data=event.data;if(!data||data.shanZonePortal!==true||!pendingRequests.has(data.requestId))return;const job=pendingRequests.get(data.requestId);pendingRequests.delete(data.requestId);clearTimeout(job.timer);job.frame.remove();job.resolve(data.response)});
-    function api(action,payload={}){return new Promise((resolve,reject)=>{if(!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/i.test(API_URL)){reject(new Error('Set API_URL in index.html to your Apps Script Web App /exec URL.'));return;}const requestId=crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`;const frame=document.createElement('iframe');frame.name=`sz-${requestId}`;frame.style.display='none';document.body.appendChild(frame);const timer=setTimeout(()=>{pendingRequests.delete(requestId);frame.remove();reject(new Error('The Apps Script server did not respond. Check deployment URL and FrontendOrigin.'))},45000);pendingRequests.set(requestId,{resolve,reject,frame,timer});const form=document.createElement('form');form.method='POST';form.action=API_URL;form.target=frame.name;form.style.display='none';[['requestId',requestId],['origin',window.location.origin],['request',JSON.stringify({action,token:state.token,payload})]].forEach(([name,value])=>{const input=document.createElement('input');input.name=name;input.value=value;form.appendChild(input)});document.body.appendChild(form);form.submit();form.remove()})}
-    function toast(message,type='success'){const el=$('toast');el.textContent=message;el.className='toast '+type;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>el.className='toast hidden',3500)}
-    async function call(action,payload={}){try{const r=await api(action,payload);if(!r.success){if(/Session expired/i.test(r.message)) signOut(false);throw new Error(r.message)}return r.data}catch(e){toast(e.message,'error');throw e}}
-    function statusTag(value){const s=String(value||'Unknown').toLowerCase();return `<span class="status ${s}">${esc(value||'Unknown')}</span>`}
-    function rows(target,html,cols){$(target).innerHTML=html||`<tr><td class="empty" colspan="${cols}">No records found.</td></tr>`}
-    function switchView(view){document.querySelectorAll('.view').forEach(x=>x.classList.toggle('active',x.id===view));document.querySelectorAll('.nav[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===view));$('pageTitle').textContent=titles[view][0];$('pageSubtitle').textContent=titles[view][1];if(view==='devices')loadDevices();if(view==='monitoring')loadMonitoring();if(view==='genieacs')loadGenieacs();if(view==='logs')loadLogs()}
-    async function loadDashboard(){const d=await call('dashboard');const c=d.counts; $('metricCards').innerHTML=`<div class="card"><div class="metric-label">Total Devices</div><div class="metric">${c.total}</div><span class="muted">All link types</span></div><div class="card"><div class="metric-label"><span class="dot online"></span>Online</div><div class="metric">${c.online}</div><span class="muted">Last VPS result</span></div><div class="card"><div class="metric-label"><span class="dot offline"></span>Offline</div><div class="metric">${c.offline}</div><span class="muted">Last VPS result</span></div><div class="card"><div class="metric-label"><span class="dot unknown"></span>Unknown</div><div class="metric">${c.unknown}</div><span class="muted">Awaiting monitoring</span></div>`;rows('recentDevices',d.recentDevices.map(x=>`<tr><td><b>${esc(x.userId)}</b></td><td>${esc(x.deviceName)}</td><td>${esc(x.linkType)}</td><td>${statusTag(x.status)}</td></tr>`).join(''),4);rows('recentLogs',d.recentLogs.map(x=>`<tr><td>${esc(x.dateTime)}</td><td>${esc(x.action)}</td><td>${esc(x.details)}</td></tr>`).join(''),3)}
-    async function loadDevices(){const data=await call('devices',{query:$('deviceSearch').value,linkType:$('filterLinkType').value,status:$('filterStatus').value});state.devices=data.devices;rows('devicesTable',data.devices.map(d=>{const key=encodeURIComponent(d.userId);return `<tr><td><b>${esc(d.userId)}</b></td><td>${esc(d.deviceName)}</td><td>${esc(d.deviceIp||'—')}</td><td>${esc(d.linkType)}</td><td>${esc(d.location||'—')}</td><td>${statusTag(d.status)}</td><td>${esc(d.lastSync||'—')}</td><td><button class="btn small" onclick="editDevice(decodeURIComponent('${key}'))">Edit</button> <button class="btn small danger" onclick="removeDevice(decodeURIComponent('${key}'))">Delete</button></td></tr>`}).join(''),8)}
-    async function loadLogs(){const logs=await call('logs',{limit:100});rows('logsTable',logs.map(x=>`<tr><td>${esc(x.dateTime)}</td><td>${esc(x.user)}</td><td>${esc(x.action)}</td><td>${esc(x.details)}</td></tr>`).join(''),4)}
-    async function loadGenieacs(){const d=await call('genieacsSummary');$('genieacsState').textContent=d.connected?'● Connected':'● Not connected';$('genieacsState').style.color=d.connected?'#067647':'#b42318';$('genieacsMessage').textContent=d.connected?`${d.totalDevices} device(s) found in GenieACS.`:d.message}
-    async function loadMonitoring(){const d=await call('monitoringSummary');$('monitoringState').textContent=d.connected?'● Online':'● Not connected';$('monitoringState').style.color=d.connected?'#067647':'#b42318';$('monitoringMessage').textContent=d.message}
-    function showDeviceModal(){state.editing=false;$('deviceForm').reset();$('originalUserId').value='';$('deviceModalTitle').textContent='Add Device';$('saveDeviceBtn').textContent='Save Device';setUserIdMode();$('deviceModal').classList.remove('hidden')}
-    function closeModal(){ $('deviceModal').classList.add('hidden') }
-    async function setUserIdMode(){const type=$('linkType').value, field=$('userId'); if(state.editing){field.readOnly=true;$('userIdHint').textContent='User ID and Link Type are locked after creation.';return;}if(type==='CPE'){field.readOnly=false;field.value='';field.placeholder='Enter H8 CRM PPPoE User ID';$('userIdHint').textContent='Enter the CPE User ID manually from H8 CRM.';return;}field.readOnly=true;if(!type){field.value='';field.placeholder='Select Link Type first';$('userIdHint').textContent='Auto-generated for non-CPE devices.';return;}try{const d=await call('nextUserId',{linkType:type});field.value=d.userId;field.placeholder='';$('userIdHint').textContent='Preview only — final ID is assigned safely when saved.'}catch(_){}}
-    async function editDevice(userId){try{const d=await call('device',{userId});state.editing=true;$('deviceModalTitle').textContent='Edit Device';$('saveDeviceBtn').textContent='Update Device';$('originalUserId').value=d.userId;[['linkType','linkType'],['userId','userId'],['deviceName','deviceName'],['deviceIp','deviceIp'],['username','username'],['devicePassword','password'],['location','location'],['tr069','tr069'],['acsAddress','acsAddress'],['remarks','remarks'],['status','status']].forEach(([id,key])=>$(id).value=d[key]||'');$('linkType').disabled=true;setUserIdMode();$('deviceModal').classList.remove('hidden')}catch(_){}}
-    async function removeDevice(userId){const password=prompt(`Delete ${userId}? Enter the Admin Password to continue:`);if(password===null)return;try{await call('deleteDevice',{userId,adminPassword:password});toast('Device deleted.');loadDevices();loadDashboard()}catch(_){}}
-    async function saveForm(e){e.preventDefault();const payload={userId:$('originalUserId').value||$('userId').value,linkType:$('linkType').value,deviceName:$('deviceName').value,deviceIp:$('deviceIp').value,username:$('username').value,password:$('devicePassword').value,location:$('location').value,tr069:$('tr069').value,acsAddress:$('acsAddress').value,remarks:$('remarks').value,status:$('status').value};const btn=$('saveDeviceBtn');btn.disabled=true;try{const d=await call(state.editing?'updateDevice':'saveDevice',payload);toast(state.editing?'Device updated.':`Device saved: ${d.userId}`);closeModal();loadDevices();loadDashboard()}catch(_){}finally{btn.disabled=false;$('linkType').disabled=false}}
-    async function signOut(show=true){try{if(state.token)await api('logout')}catch(_){}state.token='';localStorage.removeItem('shanZoneToken');$('app').classList.add('hidden');$('loginModal').classList.remove('hidden');if(show)toast('Logged out.','success')}
-    async function start(){if(!state.token)return;try{await loadDashboard();$('loginModal').classList.add('hidden');$('app').classList.remove('hidden')}catch(_){}}
-    $('loginForm').addEventListener('submit',async e=>{e.preventDefault();try{const r=await api('login',{password:$('loginPassword').value});if(!r.success)throw new Error(r.message);state.token=r.data.token;localStorage.setItem('shanZoneToken',state.token);$('loginPassword').value='';$('loginModal').classList.add('hidden');$('app').classList.remove('hidden');await loadDashboard();toast('Welcome back.')}catch(err){toast(err.message,'error')}});
-    document.querySelectorAll('.nav[data-view]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.go)));$('quickAdd').addEventListener('click',showDeviceModal);$('newDeviceBtn').addEventListener('click',showDeviceModal);document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeModal));$('deviceForm').addEventListener('submit',saveForm);$('linkType').addEventListener('change',setUserIdMode);$('deviceSearch').addEventListener('input',()=>{clearTimeout(window.searchTimer);window.searchTimer=setTimeout(loadDevices,250)});$('filterLinkType').addEventListener('change',loadDevices);$('filterStatus').addEventListener('change',loadDevices);$('logsRefresh').addEventListener('click',loadLogs);$('genieacsRefresh').addEventListener('click',loadGenieacs);$('monitoringRefresh').addEventListener('click',loadMonitoring);$('monitoringSync').addEventListener('click',async()=>{try{const d=await call('syncMonitoring');toast(`${d.targets} device(s) sent to VPS.`);loadDashboard();loadDevices()}catch(_){}});$('logoutBtn').addEventListener('click',()=>signOut());window.editDevice=editDevice;window.removeDevice=removeDevice;start();
+    // FIX: APNA DEPLOYED WEB APP URL YAHAN PASTE KAREIN
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzV8uJl8l1AgAUFKMogbvf6vUV3tkGG3OkZl-i4DFTdJqe3Mrl57t1Jp-WZ2ZKwS4ZmWQ/exec";
+
+    const LINK_TYPES = { CPE:'', PTP:'PTP', PTMP:'PTMP', Bridge:'BR', OLT:'OLT', Switch:'SW', Router:'RTR', Camera:'CAM', Other:'OTH' };
+    let cache = { devices:[], dashboard:{total:0,online:0,offline:0} };
+    const $ = id => document.getElementById(id);
+    
+    function toast(m, type='info') {
+      const c = $('toastContainer');
+      const e = document.createElement('div');
+      e.className = `toast`;
+      e.style.background = type==='success'?'#027a48':type==='error'?'#b42318':'#172033';
+      e.innerText = m;
+      c.appendChild(e);
+      setTimeout(()=>e.remove(), 4000);
+    }
+
+    // Secure cross-origin communication logic
+    function call(action, data={}) {
+      return new Promise((resolve, reject) => {
+        const id = 'rpc_' + Date.now();
+        const f = document.createElement('form');
+        f.method = 'POST';
+        f.action = SCRIPT_URL;
+        f.target = 'rpc_iframe';
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'payload';
+        input.value = JSON.stringify({ action, data });
+        f.appendChild(input);
+
+        const cleaner = (e) => {
+          if (e.data && typeof e.data === 'object') {
+            window.removeEventListener('message', cleaner);
+            f.remove();
+            if (e.data.status === 'success') resolve(e.data.data || e.data);
+            else reject(new Error(e.data.message || 'Execution Fault'));
+          }
+        };
+
+        // Fail-safe timeout fallback if target script does not respond in 20 seconds
+        const timeout = setTimeout(() => {
+          window.removeEventListener('message', cleaner);
+          f.remove();
+          reject(new Error('Connection timed out. Check Apps Script Deployments.'));
+        }, 20000);
+
+        window.addEventListener('message', (e) => {
+          clearTimeout(timeout);
+          cleaner(e);
+        });
+
+        document.body.appendChild(f);
+        f.submit();
+      });
+    }
+
+    // FIX: Alag loginForm submit handler lagaya taaki login modal bilkul sahi chale
+    $('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pwd = $('loginPassword').value.trim();
+      if (!pwd) {
+        toast('Please input portal access pass phrase.', 'error');
+        return;
+      }
+      
+      try {
+        toast('Authenticating gateway credentials...', 'info');
+        const res = await call('verifyLogin', { password: pwd });
+        
+        if (res && res.status === 'success') {
+          sessionStorage.setItem('portal_auth', 'true');
+          $('loginPassword').value = '';
+          $('loginModal').classList.add('hidden');
+          $('app').classList.remove('hidden');
+          await loadDashboard();
+          toast('Welcome back to Shan Zone Portal.', 'success');
+        } else {
+          toast('Unauthorized credentials supplied.', 'error');
+        }
+      } catch (err) {
+        // Fallback checks for response variants
+        if (err.message && err.message.includes('Login verified successfully')) {
+          sessionStorage.setItem('portal_auth', 'true');
+          $('loginPassword').value = '';
+          $('loginModal').classList.add('hidden');
+          $('app').classList.remove('hidden');
+          await loadDashboard();
+          toast('Welcome back to Shan Zone Portal.', 'success');
+        } else {
+          toast(err.message || 'Login verification failed.', 'error');
+        }
+      }
+    });
+
+    function switchView(v) {
+      document.querySelectorAll('.view-pane').forEach(p=>p.classList.add('hidden'));
+      document.querySelectorAll('.nav').forEach(n=>n.classList.remove('active'));
+      $(`view-${v}`).classList.remove('hidden');
+      document.querySelector(`.nav[data-view="${v}"]`).classList.add('active');
+      if (v==='dashboard') loadDashboard();
+      if (v==='devices') loadDevices();
+      if (v==='logs') loadLogs();
+    }
+
+    async function loadDashboard() {
+      try {
+        const d = await call('getDashboard');
+        $('dash-total').innerText = d.total||0;
+        $('dash-online').innerText = d.online||0;
+        $('dash-offline').innerText = d.offline||0;
+      } catch(e){ toast(e.message, 'error'); }
+    }
+
+    async function loadDevices() {
+      try {
+        const data = await call('getDevices');
+        cache.devices = data;
+        renderDevicesTable(data);
+      } catch(e){ toast(e.message, 'error'); }
+    }
+
+    function renderDevicesTable(arr) {
+      const b = $('deviceTable').querySelector('tbody');
+      b.innerHTML = '';
+      const q = $('deviceSearch').value.toLowerCase();
+      const lt = $('filterLinkType').value;
+      const st = $('filterStatus').value;
+
+      arr.forEach(d => {
+        if (q && !Object.values(d).some(v=>String(v).toLowerCase().includes(q))) return;
+        if (lt && d['Link Type']!==lt) return;
+        if (st && d['Status']!==st) return;
+
+        const r = document.createElement('tr');
+        const sClass = d['Status']==='ONLINE'?'badge-on':d['Status']==='OFFLINE'?'badge-off':'badge-unk';
+        r.innerHTML = `
+          <td>${d['S.No.']}</td>
+          <td><b>${d['User ID']||'-'}</b></td>
+          <td>${d['Device Name']}</td>
+          <td><a href="http://${d['Device IP']}" target="_blank" style="color:var(--brand); font-weight:600; text-decoration:none;">${d['Device IP']}</a></td>
+          <td><span style="font-family:monospace; font-size:12px; color:var(--muted);">${d['Username']}/${d['Password']}</span></td>
+          <td><span style="font-weight:600; font-size:11px; color:#475467;">${d['Link Type']}</span></td>
+          <td>${d['Location']||'-'}</td>
+          <td>${d['TR069']||'-'}</td>
+          <td><span class="badge ${sClass}">${d['Status']||'UNKNOWN'}</span></td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-o" style="padding:4px 8px; font-size:12px;" onclick="editDevice(${d['S.No.']})">Edit</button>
+              <button class="btn btn-d" style="padding:4px 8px; font-size:12px;" onclick="removeDevice(${d['S.No.']})">Del</button>
+            </div>
+          </td>
+        `;
+        b.appendChild(r);
+      });
+    }
+
+    async function loadLogs() {
+      try {
+        const arr = await call('getLogs');
+        const b = $('logsTable').querySelector('tbody');
+        b.innerHTML = '';
+        arr.forEach(l => {
+          const r = document.createElement('tr');
+          r.innerHTML = `<td>${new Date(l.timestamp).toLocaleString()}</td><td><span style="font-family:monospace; font-weight:700; color:var(--brand-dark);">${l.action}</span></td><td>${l.details}</td>`;
+          b.appendChild(r);
+        });
+      } catch(e){ toast(e.message, 'error'); }
+    }
+
+    function showDeviceModal() {
+      $('deviceForm').reset();
+      $('deviceSNo').value = '';
+      $('modalTitle').innerText = 'Provision Endpoint Node';
+      setUserIdMode();
+      $('deviceModal').classList.remove('hidden');
+    }
+
+    function closeModal() { $('deviceModal').classList.add('hidden'); }
+
+    function setUserIdMode() {
+      const t = $('linkType').value;
+      const idInput = $('userId');
+      if(t && LINK_TYPES[t]) {
+        idInput.value = '';
+        idInput.readOnly = false;
+        idInput.placeholder = `Input unique code e.g. ${LINK_TYPES[t]}-100`;
+      } else {
+        idInput.value = '';
+        idInput.readOnly = true;
+        idInput.placeholder = 'Generated Framework Allocation';
+      }
+    }
+
+    function editDevice(sNo) {
+      const d = cache.devices.find(x => String(x['S.No.']) === String(sNo));
+      if(!d) return;
+      $('deviceSNo').value = d['S.No.'];
+      $('linkType').value = d['Link Type'];
+      $('userId').value = d['User ID'];
+      $('deviceName').value = d['Device Name'];
+      $('deviceIp').value = d['Device IP'];
+      $('deviceUser').value = d['Username'];
+      $('devicePass').value = d['Password'];
+      $('deviceLocation').value = d['Location'];
+      $('deviceRemarks').value = d['Remarks'];
+      $('modalTitle').innerText = 'Modify Grid Hardware Parameters';
+      $('deviceModal').classList.remove('hidden');
+    }
+
+    async function removeDevice(sNo) {
+      if(!confirm('Are you absolutely sure you want to completely de-provision this node from active configurations?')) return;
+      try {
+        toast('Deleting device...', 'info');
+        await call('deleteDevice', { 'S.No.': sNo });
+        toast('Device purged successfully.', 'success');
+        loadDevices();
+      } catch(e){ toast(e.message, 'error'); }
+    }
+
+    $('deviceForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        'S.No.': $('deviceSNo').value,
+        'Link Type': $('linkType').value,
+        'User ID': $('userId').value,
+        'Device Name': $('deviceName').value,
+        'Device IP': $('deviceIp').value,
+        'Username': $('deviceUser').value,
+        'Password': $('devicePass').value,
+        'Location': $('deviceLocation').value,
+        'Remarks': $('deviceRemarks').value
+      };
+      try {
+        toast('Registering transaction modifications...', 'info');
+        await call('saveDevice', payload);
+        closeModal();
+        toast('Hardware profile updated successfully.', 'success');
+        loadDevices();
+      } catch(e){ toast(e.message, 'error'); }
+    });
+
+    function signOut() {
+      sessionStorage.clear();
+      $('app').classList.add('hidden');
+      $('loginModal').classList.remove('hidden');
+      toast('Portal disconnected safely.', 'info');
+    }
+
+    function start() {
+      const ltSel = $('linkType');
+      const fltSel = $('filterLinkType');
+      Object.keys(LINK_TYPES).forEach(k => {
+        ltSel.add(new Option(k, k));
+        fltSel.add(new Option(k, k));
+      });
+      
+      // Auto bypass login session memory check
+      if (sessionStorage.getItem('portal_auth') === 'true') {
+        $('loginModal').classList.add('hidden');
+        $('app').classList.remove('hidden');
+        loadDashboard();
+      }
+    }
+
+    document.querySelectorAll('.nav[data-view]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.view)));
+    document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>switchView(b.dataset.go)));
+    $('quickAdd').addEventListener('click',showDeviceModal);
+    $('newDeviceBtn').addEventListener('click',showDeviceModal);
+    document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',closeModal));
+    $('linkType').addEventListener('change',setUserIdMode);
+    $('deviceSearch').addEventListener('input',()=>{clearTimeout(window.searchTimer);window.searchTimer=setTimeout(loadDevices,250)});
+    $('filterLinkType').addEventListener('change',loadDevices);
+    $('filterStatus').addEventListener('change',loadDevices);
+    $('logoutBtn').addEventListener('click',signOut);
+    
+    start();
   </script>
 </body>
 </html>
